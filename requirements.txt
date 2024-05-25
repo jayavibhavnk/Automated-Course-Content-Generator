@@ -1,4 +1,8 @@
 streamlit
 python-dotenv
-openai
 fpdf
+langchain==0.0.320
+openai
+beautifulsoup4==4.12.2
+youtube-search==2.1.2
+googlesearch-python==1.2.3
