@@ -156,8 +156,6 @@ def gen_links(input_text):
     resultsfinal = ['https://youtube.com' + url['url_suffix'] for url in results]
     return linklist[:4], resultsfinal
 
-
-
 def generate_pdf(content, filename):
     content = unicodedata.normalize('NFKD', content).encode('ascii', 'ignore').decode('ascii')
     pdf = FPDF()
@@ -381,9 +379,17 @@ with col2:
                                     mindmapvalue = create_mindmap_kroki(str(mindmap_data))
                                     st.write("Generated Mindmap:")
                                     render_svg(mindmapvalue)
+                                    g_links, y_links = gen_links(module_name)
+                                    st.video(y_links[0])
                                     st.write(complete_course)
+                                    st.write("Relevant Links")
+                                    for i in glinks:
+                                        st.write(i)
+                            
+                                    st.write("Youtube Links")
+                                    for i in ylinks:
+                                        st.write(i)
                                     
-                                
                                 module_content +=  complete_course + "\n"*2
                         quizzy_prompt_final = QUIZZY_PROMPT + module_content
                         with st.spinner(f"Generating quiz questions for {module_name}"):
