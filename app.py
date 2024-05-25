@@ -176,7 +176,7 @@ st.set_page_config(
 
 load_dotenv()
 
-st.title("Automated Course Content Generator 🤖")
+st.title("BRAINZY v2🤖")
 
 USER_AVATAR = "👤"
 BOT_AVATAR = "🤖"
