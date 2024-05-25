@@ -12,6 +12,92 @@ from prompts.tabler_prompt import TABLER_PROMPT
 from prompts.dictator_prompt import DICTATOR_PROMPT
 from prompts.quizzy_prompt import QUIZZY_PROMPT
 
+def create_prompt_template_mindmap(text_from_website):
+    sub_p = """for the above text create a tree node hierarchy for the above content
+        in this format
+        heading
+        sub headings
+        keywords
+        extract as many keywords and sub headings as possible
+        there should be about 5 to 20 headings and each of them should have multiple keywords,
+        keywords can be key phrases in the length of 1 word to 7 words
+        it should maintain a hierarchy
+        should return in this json format
+        the format should be strictly followed 
+        example
+
+        {"heading":
+        {"sub-heading":
+        {
+        "keyword": {},
+        },
+        {"sub-heading 2":
+        {
+        "keyword": {},
+        },
+
+        }
+        },
+        }"""
+    prompt = text_from_website + sub_p
+
+    return prompt
+
+def create_mindmap(json_file):
+    headings = list(json_file.keys())
+    # print(headings)
+    mindmaps = []
+    # mindmap = "mindmap"+"\n"
+    for i in headings:
+        mindmap = "mindmap"+"\n"
+        nh = i.replace('(', '')
+        nh = nh.replace(')', '')
+        mindmap = mindmap + "  " + "root({})".format(nh) + "\n"
+        sub_map = json_file[i]
+        sub_headings = list(sub_map.keys())
+        for j in sub_headings:
+            mindmap = mindmap + "    " + j + '\n'
+            items = list(sub_map[j].keys())
+            for k in items:
+                mindmap = mindmap + '      ' + k + '\n'
+        mindmaps.append(mindmap)
+
+    return mindmaps
+
+
+def generate_kroki_diagram(diagram_code, diagram_type):
+    kroki_api_url = "https://kroki.io"
+    payload = {
+        "diagram_source": diagram_code,
+        "diagram_type": diagram_type,
+    }
+    response = requests.post(f"{kroki_api_url}/{diagram_type}/svg", json=payload)
+    return response.text if response.status_code == 200 else None
+
+def render_svg(svg):
+    """Renders the given svg string."""
+    b64 = base64.b64encode(svg.encode('utf-8')).decode("utf-8")
+    html = r'<img src="data:image/svg+xml;base64,%s"/>' % b64
+    st.write(html, unsafe_allow_html=True)
+
+def mindmapgen(data):
+    #edit the svg data here
+    svg_file_path = "sample.svg"
+    with open(svg_file_path, "r") as svg_file:
+        svg_content = svg_file.read()
+    return svg_content
+
+
+def gen_links(input_text):
+    results = googlesearch.search(input_text)
+    linklist = []
+    for i in results:
+      linklist.append(i)
+    results = YoutubeSearch(input_text, max_results=3).to_dict()
+    resultsfinal = ['https://youtube.com' + url['url_suffix'] for url in results]
+    return linklist[:4], resultsfinal
+
+
 
 def generate_pdf(content, filename):
     content = unicodedata.normalize('NFKD', content).encode('ascii', 'ignore').decode('ascii')
@@ -21,6 +107,7 @@ def generate_pdf(content, filename):
     pdf.multi_cell(0, 10, content)
     pdf.output(filename, 'F')
     return pdf
+
 
 # Customizing the page configuration
 st.set_page_config(
@@ -231,7 +318,12 @@ with col2:
                                 st.success(f"Generated content for {module_name}, {lesson_name}")
 
                                 with st.expander("Click to view!"):
+                                    mindmap_data = complete_course
+                                    mindmapvalue = create_mindmap_kroki(str(mindmap_data))
+                                    st.write("Generated Mindmap:")
+                                    render_svg(mindmapvalue)
                                     st.write(complete_course)
+                                    
                                 
                                 module_content +=  complete_course + "\n"*2
                         quizzy_prompt_final = QUIZZY_PROMPT + module_content
