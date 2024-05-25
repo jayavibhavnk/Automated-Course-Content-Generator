@@ -12,6 +12,29 @@ from prompts.tabler_prompt import TABLER_PROMPT
 from prompts.dictator_prompt import DICTATOR_PROMPT
 from prompts.quizzy_prompt import QUIZZY_PROMPT
 
+def create_mindmap_kroki(text1):
+    text1 = text1[:2048]
+    prompt = create_prompt_template(text1)
+    m = chat_openai(prompt)
+    # m = chat_with_openai(prompt)
+    newparse = m[m.find("{"):(len(m)-m[::-1].find('}'))]
+    newparse = json.loads(newparse)
+    # m = json.loads(m)
+    m = create_mindmap(newparse)
+    mermaid_svgs = ""
+    try:
+        for i in m:
+            diagram_svg = generate_kroki_diagram(i, "mermaid")
+
+            if diagram_svg:
+                mermaid_svgs = mermaid_svgs + diagram_svg
+            else:
+                print("Diagram generation failed.")
+        return mermaid_svgs
+    except:
+        print("error")
+        return None
+
 def create_prompt_template_mindmap(text_from_website):
     sub_p = """for the above text create a tree node hierarchy for the above content
         in this format
