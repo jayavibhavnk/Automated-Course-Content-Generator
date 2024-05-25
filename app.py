@@ -376,12 +376,12 @@ with col2:
 
                                 with st.expander("Click to view!"):
                                     mindmap_data = complete_course
-                                        try:
-                                            mindmapvalue = create_mindmap_kroki(str(mindmap_data))
-                                            st.write("Generated Mindmap:")
-                                            render_svg(mindmapvalue)
-                                        except:
-                                            pass
+                                    try:
+                                        mindmapvalue = create_mindmap_kroki(str(mindmap_data))
+                                        st.write("Generated Mindmap:")
+                                        render_svg(mindmapvalue)
+                                    except:
+                                        pass
                                     g_links, y_links = gen_links(module_name)
                                     st.write(complete_course)
                                     st.video(y_links[0])
