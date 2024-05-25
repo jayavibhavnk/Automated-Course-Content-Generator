@@ -14,7 +14,7 @@ from prompts.quizzy_prompt import QUIZZY_PROMPT
 
 def create_mindmap_kroki(text1):
     text1 = text1[:2048]
-    prompt = create_prompt_template(text1)
+    prompt = create_prompt_template_mindmap(text1)
     m = chat_openai(prompt)
     # m = chat_with_openai(prompt)
     newparse = m[m.find("{"):(len(m)-m[::-1].find('}'))]
