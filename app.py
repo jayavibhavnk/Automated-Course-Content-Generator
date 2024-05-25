@@ -12,6 +12,18 @@ from prompts.tabler_prompt import TABLER_PROMPT
 from prompts.dictator_prompt import DICTATOR_PROMPT
 from prompts.quizzy_prompt import QUIZZY_PROMPT
 
+OPENAI_API_KEY = st.secrets.OPENAI_API_KEY
+
+def chat_openai(query):
+    llm = ChatOpenAI(temperature=1.1, openai_api_key = OPENAI_API_KEY)
+    prompt = ChatPromptTemplate.from_template(
+        "{query}"
+    )
+
+    chain = LLMChain(llm=llm, prompt=prompt)
+
+    return (chain.run(query=query))
+
 def create_mindmap_kroki(text1):
     text1 = text1[:2048]
     prompt = create_prompt_template_mindmap(text1)
