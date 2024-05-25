@@ -11,6 +11,17 @@ import base64
 from prompts.tabler_prompt import TABLER_PROMPT
 from prompts.dictator_prompt import DICTATOR_PROMPT
 from prompts.quizzy_prompt import QUIZZY_PROMPT
+import streamlit as st
+import requests
+from bs4 import BeautifulSoup
+import requests
+import base64
+import googlesearch 
+from youtube_search import YoutubeSearch
+import json
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain.chains import LLMChain
 
 OPENAI_API_KEY = st.secrets.OPENAI_API_KEY
 
