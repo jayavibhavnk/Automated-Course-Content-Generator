@@ -25,18 +25,31 @@ from langchain.chains import LLMChain
 
 OPENAI_API_KEY = st.secrets.OPENAI_API_KEY
 
+# def chat_openai(query):
+#     llm = ChatOpenAI(temperature=1.1, openai_api_key = OPENAI_API_KEY)
+#     prompt = ChatPromptTemplate.from_template(
+#         "{query}"
+#     )
+
+#     chain = LLMChain(llm=llm, prompt=prompt)
+
+#     return (chain.run(query=query))
+
 def chat_openai(query):
-    llm = ChatOpenAI(temperature=1.1, openai_api_key = OPENAI_API_KEY)
-    prompt = ChatPromptTemplate.from_template(
-        "{query}"
+    client = OpenAI(api_key = OPENAI_API_KEY)
+    completion = client.chat.completions.create(
+    model="gpt-3.5-turbo-0125",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant"},
+        {"role": "user", "content": query}
+    ],
+    n = 1
     )
 
-    chain = LLMChain(llm=llm, prompt=prompt)
-
-    return (chain.run(query=query))
+    return(completion.choices[0].message.content)
 
 def create_mindmap_kroki(text1):
-    text1 = text1[:2048]
+    text1 = text1[:4096]
     prompt = create_prompt_template_mindmap(text1)
     m = chat_openai(prompt)
     # m = chat_with_openai(prompt)
