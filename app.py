@@ -380,14 +380,14 @@ with col2:
                                     st.write("Generated Mindmap:")
                                     render_svg(mindmapvalue)
                                     g_links, y_links = gen_links(module_name)
-                                    st.video(y_links[0])
                                     st.write(complete_course)
+                                    st.video(y_links[0])
                                     st.write("Relevant Links")
-                                    for i in glinks:
+                                    for i in g_links:
                                         st.write(i)
                             
                                     st.write("Youtube Links")
-                                    for i in ylinks:
+                                    for i in y_links:
                                         st.write(i)
                                     
                                 module_content +=  complete_course + "\n"*2
